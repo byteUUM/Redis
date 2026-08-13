@@ -3,6 +3,9 @@
 #include <string>
 #include <unordered_map>
 #include <sw/redis++/redis++.h>
+#include <chrono>
+#include <thread>
+#include <unistd.h>
 
 using std::cout;
 using std::endl;
@@ -71,7 +74,36 @@ void test4(sw::redis::Redis& redis)
         std::cout<<i<<std::endl;
     }
 }
-
+void test5(sw::redis::Redis& redis)
+{
+    redis.flushall();
+    redis.set("key1","1");
+    redis.expire("key1",std::chrono::seconds(10));
+    auto ret = redis.ttl("key1");
+    std::cout<<ret<<std::endl;
+    sleep(1);
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    ret = redis.ttl("key1");
+    std::cout<<ret<<std::endl;
+}
+void test6(sw::redis::Redis& redis)
+{
+    redis.flushall();
+    redis.set("key1","1");
+    redis.lpush("key2","2");
+    redis.hset("hash","a","A");
+    redis.sadd("set1","data");
+    redis.zadd("zset1","data",9.6);
+    
+    auto func = [&](std::string str){
+        std::cout<<redis.type(str)<<std::endl;
+    };
+    func("key1");
+    func("key2");
+    func("hash");
+    func("set1");
+    func("zset1");
+}
 int main() {
     
     // 创建 Redis 对象的时候, 需要在构造函数中, 指定 redis 服务器的地址和端口. 
@@ -80,6 +112,9 @@ int main() {
     //test1(redis);
     //test2(redis);
     //test3(redis);
-    test4(redis);
+    //test4(redis);
+    //test5(redis);
+    test6(redis);
     return 0;
 }
+
