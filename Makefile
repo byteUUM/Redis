@@ -10,3 +10,4 @@ hello:hello.cc
 clean:
 	rm hello
 	rm generic
+	rm string
