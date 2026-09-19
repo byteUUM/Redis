@@ -1,5 +1,5 @@
 .PHONY:all
-all:generic hello string list hash set zset
+all:generic hello string list hash set zset lock
 string:string.cc
 	g++ -std=c++17 -o $@ $^ /usr/local/lib/libredis++.a /usr/lib/x86_64-linux-gnu/libhiredis.a -pthread
 generic:generic.cc
@@ -14,6 +14,8 @@ set:set.cc
 	g++ -std=c++17 -o $@ $^ /usr/local/lib/libredis++.a /usr/lib/x86_64-linux-gnu/libhiredis.a -pthread
 zset:zset.cc
 	g++ -std=c++17 -o $@ $^ /usr/local/lib/libredis++.a /usr/lib/x86_64-linux-gnu/libhiredis.a -pthread
+lock:lock.cc
+	g++ -std=c++17 -o $@ $^ /usr/local/lib/libredis++.a /usr/lib/x86_64-linux-gnu/libhiredis.a -pthread
 .PHONY:clean
 clean:
 	rm hello
@@ -23,3 +25,4 @@ clean:
 	rm hash
 	rm set
 	rm zset
+	rm lock
